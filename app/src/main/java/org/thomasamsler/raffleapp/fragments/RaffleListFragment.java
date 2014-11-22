@@ -3,14 +3,21 @@ package org.thomasamsler.raffleapp.fragments;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
 import org.thomasamsler.raffleapp.AppConstants;
+import org.thomasamsler.raffleapp.R;
+import org.thomasamsler.raffleapp.activities.AddRaffleActivity;
+import org.thomasamsler.raffleapp.activities.RaffleDetailActivity;
 import org.thomasamsler.raffleapp.adapters.RaffleAdapter;
 import org.thomasamsler.raffleapp.data.RaffleContract.RaffleEntry;
 
@@ -70,6 +77,9 @@ public class RaffleListFragment extends ListFragment implements LoaderManager.Lo
         if(null != cursor && cursor.moveToPosition(position)) {
 
             Log.d(LOG_TAG, "DEBUG: raffle name : " + cursor.getString(COL_RAFFLE_NAME));
+            Intent intent = new Intent(getActivity(), RaffleDetailActivity.class);
+            intent.putExtra(RAFFLE_ID_KEY, cursor.getString(COL_RAFFLE_ID));
+            startActivity(intent);
         }
     }
 
@@ -77,6 +87,8 @@ public class RaffleListFragment extends ListFragment implements LoaderManager.Lo
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -104,5 +116,25 @@ public class RaffleListFragment extends ListFragment implements LoaderManager.Lo
     public void onLoaderReset(Loader<Cursor> loader) {
 
         mRaffleAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_raffle, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_add) {
+
+            Intent intent = new Intent(getActivity(), AddRaffleActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

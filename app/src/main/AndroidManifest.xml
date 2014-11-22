@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.MainActivity"
+            android:name="org.thomasamsler.raffleapp.activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,11 +18,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
+            android:name="org.thomasamsler.raffleapp.data.RaffleProvider"
             android:authorities="@string/content_authority"
-            android:name=".data.RaffleProvider"
             android:exported="false"
             android:syncable="true" />
+
+        <activity
+            android:name="org.thomasamsler.raffleapp.activities.AddRaffleActivity"
+            android:label="@string/title_activity_add_raffle"
+            android:parentActivityName="org.thomasamsler.raffleapp.activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.thomasamsler.raffleapp.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="org.thomasamsler.raffleapp.activities.RaffleDetailActivity"
+            android:label="@string/title_activity_raffle_detail"
+            android:parentActivityName="org.thomasamsler.raffleapp.activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.thomasamsler.raffleapp.activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

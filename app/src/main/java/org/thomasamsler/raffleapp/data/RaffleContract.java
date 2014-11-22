@@ -24,6 +24,8 @@ public class RaffleContract {
         // Table name
         public static final String TABLE_NAME = "raffle";
 
+        public static final String COLUMN_RAFFLE_ID = RaffleEntry._ID;
+
         public static final String COLUMN_RAFFLE_NAME = "name";
 
         public static final String COLUMN_RAFFLE_PIN = "pin";

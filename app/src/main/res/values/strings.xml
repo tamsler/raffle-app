@@ -5,7 +5,14 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="content_authority">org.thomasamsler.raffleapp</string>
+    <string name="action_add">Add</string>
+    <string name="title_activity_add_raffle">AddRaffleActivity</string>
+    <string name="activity_add_raffle_title">Create Raffle</string>
+    <string name="fragment_add_raffle_button">Create</string>
+    <string name="title_activity_raffle_detail">RaffleDetailActivity</string>
+    <string name="activity_raffle_detail_name">Raffle</string>
+    <string name="fragment_raffle_detail_add_entry_button">Add</string>
+    <string name="fragment_raffle_detail_name_label">Name</string>
 
 </resources>

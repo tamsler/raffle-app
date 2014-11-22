@@ -24,7 +24,7 @@ public class RaffleDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         final String SQL_CREATE_RAFFLE_TABLE = "CREATE TABLE " + RaffleEntry.TABLE_NAME + " (" +
-                RaffleEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                RaffleEntry._ID + " TEXT PRIMARY KEY," +
                 RaffleEntry.COLUMN_RAFFLE_NAME + " TEXT UNIQUE NOT NULL," +
                 RaffleEntry.COLUMN_RAFFLE_PIN + " TEXT NOT NULL" +
                 ");";
