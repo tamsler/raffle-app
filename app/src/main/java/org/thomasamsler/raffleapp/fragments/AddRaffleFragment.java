@@ -57,8 +57,6 @@ public class AddRaffleFragment extends Fragment implements AppConstants {
             @Override
             public void onClick(View v) {
 
-                // Long.toString(System.currentTimeMillis())
-
                 String raffleId = UUID.randomUUID().toString();
 
                 Raffle raffle = new Raffle(
@@ -73,7 +71,6 @@ public class AddRaffleFragment extends Fragment implements AppConstants {
 
                 getActivity().getContentResolver().insert(RaffleEntry.CONTENT_URI, raffleValues);
 
-                // FIXME: Experimenting with data and Firebase
                 // https://www.firebase.com/docs/android/guide/saving-data.html
                 Firebase.setAndroidContext(getActivity());
                 Firebase fbRef = new Firebase("https://raffle-app.firebaseio.com/raffles/" + raffle.getId());
@@ -90,17 +87,7 @@ public class AddRaffleFragment extends Fragment implements AppConstants {
                         else {
 
                             Log.d(LOG_TAG, "Data saved successfully.");
-
-                            ref.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    Log.d(LOG_TAG, "" + snapshot.getValue());
-                                }
-                                @Override
-                                public void onCancelled(FirebaseError firebaseError) {
-                                    Log.d(LOG_TAG, "The read failed: " + firebaseError.getMessage());
-                                }
-                            });
+                            getActivity().finish();
                         }
                     }
                 });

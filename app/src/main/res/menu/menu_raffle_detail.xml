@@ -1,8 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="org.thomasamsler.raffleapp.activities.RaffleDetailActivity">
-    <item android:id="@+id/action_settings"
-          android:title="@string/action_settings"
+    <item android:id="@+id/action_entries"
+          android:title="@string/action_entries"
           android:orderInCategory="100"
-          android:showAsAction="never"/>
+          android:showAsAction="always"/>
+    <item android:id="@+id/action_draw"
+          android:title="@string/action_draw"
+          android:orderInCategory="200"
+          android:showAsAction="always"/>
 </menu>

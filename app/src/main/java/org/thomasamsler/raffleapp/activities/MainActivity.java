@@ -1,6 +1,7 @@
 package org.thomasamsler.raffleapp.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,12 +18,16 @@ public class MainActivity extends Activity implements AppConstants {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
         if(savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, RaffleListFragment.newInstance())
                     .commit();
         }
+
+        setTitle(R.string.activity_main_title);
     }
 
 
@@ -40,6 +45,8 @@ public class MainActivity extends Activity implements AppConstants {
 
         if(id == R.id.action_settings) {
 
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 

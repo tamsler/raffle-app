@@ -3,7 +3,6 @@ package org.thomasamsler.raffleapp.activities;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,9 +13,9 @@ import android.os.Build;
 
 import org.thomasamsler.raffleapp.AppConstants;
 import org.thomasamsler.raffleapp.R;
-import org.thomasamsler.raffleapp.fragments.RaffleDetailFragment;
+import org.thomasamsler.raffleapp.fragments.EntriesFragment;
 
-public class RaffleDetailActivity extends Activity implements AppConstants {
+public class EntriesActivity extends Activity implements AppConstants {
 
     private String mRaffleId;
 
@@ -25,47 +24,38 @@ public class RaffleDetailActivity extends Activity implements AppConstants {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_raffle_detail);
+        setContentView(R.layout.activity_entries);
 
         mRaffleId = getIntent().getExtras().getString(RAFFLE_ID_KEY);
 
         if(savedInstanceState == null) {
+
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, RaffleDetailFragment.newInstance(mRaffleId))
+                    .add(R.id.container, EntriesFragment.newInstance(mRaffleId))
                     .commit();
         }
 
-        setTitle(R.string.activity_raffle_detail_name);
+        setTitle(R.string.activity_raffle_entries_title);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_raffle_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_entries, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        Intent intent;
-
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch(id) {
-
-            case R.id.action_entries:
-                intent = new Intent(this, EntriesActivity.class);
-                intent.putExtra(RAFFLE_ID_KEY, mRaffleId);
-                startActivity(intent);
-                break;
-
-            case R.id.action_draw:
-                intent = new Intent(this, DrawResultActivity.class);
-                intent.putExtra(RAFFLE_ID_KEY, mRaffleId);
-                startActivity(intent);
-                break;
+        //noinspection SimplifiableIfStatement
+        if(id == R.id.action_settings) {
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

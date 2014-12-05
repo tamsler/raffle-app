@@ -1,5 +1,7 @@
 package org.thomasamsler.raffleapp.fragments;
 
+import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
@@ -13,9 +15,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.AccountPicker;
 
 import org.thomasamsler.raffleapp.AppConstants;
 import org.thomasamsler.raffleapp.R;
+import org.thomasamsler.raffleapp.Utility;
 import org.thomasamsler.raffleapp.activities.AddRaffleActivity;
 import org.thomasamsler.raffleapp.activities.RaffleDetailActivity;
 import org.thomasamsler.raffleapp.adapters.RaffleAdapter;
@@ -45,9 +51,7 @@ public class RaffleListFragment extends ListFragment implements LoaderManager.Lo
         return fragment;
     }
 
-    public RaffleListFragment() {
-        // Required empty public constructor
-    }
+    public RaffleListFragment() { }
 
     @Override
     public void onResume() {
@@ -72,14 +76,23 @@ public class RaffleListFragment extends ListFragment implements LoaderManager.Lo
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
 
-        Cursor cursor = mRaffleAdapter.getCursor();
+        String user = Utility.getPreferenceUser(getActivity());
 
-        if(null != cursor && cursor.moveToPosition(position)) {
+        if(null == user || "".equals(user)) {
 
-            Log.d(LOG_TAG, "DEBUG: raffle name : " + cursor.getString(COL_RAFFLE_NAME));
-            Intent intent = new Intent(getActivity(), RaffleDetailActivity.class);
-            intent.putExtra(RAFFLE_ID_KEY, cursor.getString(COL_RAFFLE_ID));
-            startActivity(intent);
+            startActivityForResult(AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, false, null, null, null, null), 1000);
+            Toast.makeText(getActivity(), R.string.fragment_raffle_list_missing_user, Toast.LENGTH_SHORT).show();
+        }
+        else {
+
+            Cursor cursor = mRaffleAdapter.getCursor();
+
+            if(null != cursor && cursor.moveToPosition(position)) {
+
+                Intent intent = new Intent(getActivity(), RaffleDetailActivity.class);
+                intent.putExtra(RAFFLE_ID_KEY, cursor.getString(COL_RAFFLE_ID));
+                startActivity(intent);
+            }
         }
     }
 
@@ -89,6 +102,13 @@ public class RaffleListFragment extends ListFragment implements LoaderManager.Lo
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+
+        String user = Utility.getPreferenceUser(getActivity());
+
+        if(null == user || "".equals(user)) {
+
+            startActivityForResult(AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, false, null, null, null, null), 1000);
+        }
     }
 
     @Override
@@ -136,5 +156,23 @@ public class RaffleListFragment extends ListFragment implements LoaderManager.Lo
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+
+        if (requestCode == 1000 && resultCode == Activity.RESULT_OK) {
+
+            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+
+            if(null != accountName && !"".equals(accountName)) {
+
+                Utility.setPreferenceUser(getActivity(), accountName);
+            }
+            else {
+
+                Log.e(LOG_TAG, "ERROR: Did not get valid accountName");
+            }
+        }
     }
 }

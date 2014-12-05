@@ -8,11 +8,14 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
+
+import org.thomasamsler.raffleapp.AppConstants;
 
 /**
  * Created by tamsler on 11/20/14.
  */
-public class RaffleProvider extends ContentProvider {
+public class RaffleProvider extends ContentProvider implements AppConstants {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private RaffleDbHelper mOpenHelper;
@@ -84,25 +87,26 @@ public class RaffleProvider extends ContentProvider {
 
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
-        Uri returnUri;
+        Uri returnUri = null;
 
         switch(match) {
 
             case RAFFLE:
-                long _id = db.insert(RaffleContract.RaffleEntry.TABLE_NAME, null, values);
+                long _id = db.insertWithOnConflict(RaffleContract.RaffleEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 
                 if(_id > 0) {
 
                     returnUri = RaffleContract.RaffleEntry.buildRaffleUri(_id);
                 }
-                else {
-
-                    throw new SQLException("Failed to insert row into " + uri);
-                }
                 break;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if(null != returnUri) {
+
+            getContext().getContentResolver().notifyChange(uri, null);
         }
 
         return returnUri;

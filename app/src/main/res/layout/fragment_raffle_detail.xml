@@ -7,28 +7,27 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:drawableBottom="@drawable/dividerline"
-        android:text="@string/fragment_raffle_detail_name_label"
-        android:textSize="18sp"/>
-
-    <TextView
         android:id="@+id/fragment_raffle_detail_name_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/fragment_raffle_detail_name_label"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <EditText
         android:id="@+id/fragment_raffle_detail_entry_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:hint="Ticket Name"
+        android:layout_marginTop="32dp"
+        android:hint="@string/fragment_raffle_detail_entry"
         />
 
     <Button
