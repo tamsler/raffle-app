@@ -3,11 +3,16 @@ package org.thomasamsler.raffleapp.fragments;
 
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -24,6 +29,8 @@ import com.firebase.client.ValueEventListener;
 import org.thomasamsler.raffleapp.AppConstants;
 import org.thomasamsler.raffleapp.R;
 import org.thomasamsler.raffleapp.Utility;
+import org.thomasamsler.raffleapp.activities.DrawResultActivity;
+import org.thomasamsler.raffleapp.activities.EntriesActivity;
 import org.thomasamsler.raffleapp.data.RaffleContract.RaffleEntry;
 
 import java.util.ArrayList;
@@ -46,10 +53,6 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
             RaffleEntry.COLUMN_RAFFLE_PIN
     };
 
-    public static final int COL_RAFFLE_ID = 0;
-    public static final int COL_RAFFLE_NAME = 1;
-    public static final int COL_RAFFLE_PIN = 2;
-
     private TextView mRaffleName;
     private EditText mRaffleEntry;
     private Button mAddEntryButton;
@@ -64,14 +67,14 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
         return fragment;
     }
 
-    public RaffleDetailFragment() {
-
-    }
+    public RaffleDetailFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
 
         Bundle bundle = getArguments();
 
@@ -79,9 +82,7 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_raffle_detail, container, false);
 
@@ -193,6 +194,39 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
 
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.menu_raffle_detail, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Intent intent;
+
+        int id = item.getItemId();
+
+        switch(id) {
+
+            case R.id.action_entries:
+                intent = new Intent(getActivity(), EntriesActivity.class);
+                intent.putExtra(RAFFLE_ID_KEY, mRaffleId);
+                startActivity(intent);
+                break;
+
+            case R.id.action_draw:
+                intent = new Intent(getActivity(), DrawResultActivity.class);
+                intent.putExtra(RAFFLE_ID_KEY, mRaffleId);
+                startActivity(intent);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

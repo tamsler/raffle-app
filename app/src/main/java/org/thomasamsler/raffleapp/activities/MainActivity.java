@@ -9,10 +9,13 @@ import android.view.MenuItem;
 
 import org.thomasamsler.raffleapp.AppConstants;
 import org.thomasamsler.raffleapp.R;
+import org.thomasamsler.raffleapp.fragments.RaffleDetailFragment;
 import org.thomasamsler.raffleapp.fragments.RaffleListFragment;
 
 
-public class MainActivity extends Activity implements AppConstants {
+public class MainActivity extends Activity implements RaffleListFragment.Callback, AppConstants {
+
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,13 +24,23 @@ public class MainActivity extends Activity implements AppConstants {
 
         setContentView(R.layout.activity_main);
 
-        if(savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, RaffleListFragment.newInstance())
-                    .commit();
-        }
-
         setTitle(R.string.activity_main_title);
+
+        if (findViewById(R.id.raffle_detail_container) != null) {
+
+            mTwoPane = true;
+
+            if (savedInstanceState == null) {
+
+                getFragmentManager().beginTransaction()
+                    .add(R.id.raffle_detail_container, RaffleDetailFragment.newInstance(""))
+                    .commit();
+            }
+        }
+        else {
+
+            mTwoPane = false;
+        }
     }
 
 
@@ -51,5 +64,22 @@ public class MainActivity extends Activity implements AppConstants {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(String raffleId) {
+
+        if(mTwoPane) {
+
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.raffle_detail_container, RaffleDetailFragment.newInstance(raffleId))
+                    .commit();
+        }
+        else {
+
+            Intent intent = new Intent(this, RaffleDetailActivity.class);
+            intent.putExtra(RAFFLE_ID_KEY, raffleId);
+            startActivity(intent);
+        }
     }
 }

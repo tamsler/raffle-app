@@ -108,7 +108,6 @@ public class EntriesFragment extends ListFragment implements AppConstants {
             public void onCancelled(FirebaseError error) {
 
             }
-
         });
     }
 }

@@ -37,37 +37,4 @@ public class RaffleDetailActivity extends Activity implements AppConstants {
 
         setTitle(R.string.activity_raffle_detail_name);
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_raffle_detail, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        Intent intent;
-
-        int id = item.getItemId();
-
-        switch(id) {
-
-            case R.id.action_entries:
-                intent = new Intent(this, EntriesActivity.class);
-                intent.putExtra(RAFFLE_ID_KEY, mRaffleId);
-                startActivity(intent);
-                break;
-
-            case R.id.action_draw:
-                intent = new Intent(this, DrawResultActivity.class);
-                intent.putExtra(RAFFLE_ID_KEY, mRaffleId);
-                startActivity(intent);
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

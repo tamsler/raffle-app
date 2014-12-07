@@ -53,6 +53,11 @@ public class RaffleListFragment extends ListFragment implements LoaderManager.Lo
 
     public RaffleListFragment() { }
 
+    public interface Callback {
+
+        public void onItemSelected(String raffleId);
+    }
+
     @Override
     public void onResume() {
 
@@ -89,9 +94,7 @@ public class RaffleListFragment extends ListFragment implements LoaderManager.Lo
 
             if(null != cursor && cursor.moveToPosition(position)) {
 
-                Intent intent = new Intent(getActivity(), RaffleDetailActivity.class);
-                intent.putExtra(RAFFLE_ID_KEY, cursor.getString(COL_RAFFLE_ID));
-                startActivity(intent);
+                ((Callback)getActivity()).onItemSelected(cursor.getString(COL_RAFFLE_ID));
             }
         }
     }
@@ -113,7 +116,6 @@ public class RaffleListFragment extends ListFragment implements LoaderManager.Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
 
         return new CursorLoader(
                 getActivity(),

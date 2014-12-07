@@ -104,7 +104,6 @@ public class DrawResultListFragment extends ListFragment implements AppConstants
             public void onCancelled(FirebaseError error) {
 
             }
-
         });
     }
 }

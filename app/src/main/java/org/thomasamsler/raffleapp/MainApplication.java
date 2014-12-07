@@ -32,8 +32,6 @@ public class MainApplication extends Application implements AppConstants {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
-                Log.d(LOG_TAG, "DEBUG : MainApplication : onDataChange : XXXYYYYXXXYXYXYXY --- XYXYXYXY");
-
                 Map<String, Map<String, Object>> data = (Map<String, Map<String, Object>>) snapshot.getValue();
 
                 if(null != data) {
@@ -41,7 +39,6 @@ public class MainApplication extends Application implements AppConstants {
                     for(String key : data.keySet()) {
 
                         Map<String, Object> raffle = data.get(key);
-                        Log.d(LOG_TAG, "DEBUG: MainApplication : name : " + data.get(key).get("name"));
 
                         ContentValues raffleValues = new ContentValues();
                         raffleValues.put(RaffleContract.RaffleEntry.COLUMN_RAFFLE_ID, (String) raffle.get("id"));
