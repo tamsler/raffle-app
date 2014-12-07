@@ -2,13 +2,13 @@ package org.thomasamsler.raffleapp.fragments;
 
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.ShareActionProvider;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -29,6 +29,9 @@ public class DrawResultListFragment extends ListFragment implements AppConstants
     private List<String> mWinners;
     private String mRaffleId;
 
+    private ShareActionProvider mShareActionProvider;
+    private Intent mShareIntent = new Intent(Intent.ACTION_SEND);
+
     public static DrawResultListFragment newInstance(String raffleId) {
 
         Bundle bundle = new Bundle();
@@ -46,9 +49,14 @@ public class DrawResultListFragment extends ListFragment implements AppConstants
 
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
+
         Bundle bundle = getArguments();
 
         mRaffleId = bundle.getString(RAFFLE_ID_KEY);
+
+        mShareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        mShareIntent.setType("text/plain");
     }
 
     @Override
@@ -97,6 +105,15 @@ public class DrawResultListFragment extends ListFragment implements AppConstants
 
                         mAdapter.notifyDataSetChanged();
                     }
+
+                    String winners = "";
+
+                    for(String winner : modifiedEntries) {
+
+                        winners += winner + "\n";
+                    }
+
+                    mShareIntent.putExtra(Intent.EXTRA_TEXT, winners);
                 }
             }
 
@@ -105,5 +122,22 @@ public class DrawResultListFragment extends ListFragment implements AppConstants
 
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.menu_draw_result, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+
+        mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
+
+        if(null != mShareActionProvider) {
+
+            mShareActionProvider.setShareIntent(mShareIntent);
+        }
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

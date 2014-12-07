@@ -32,5 +32,6 @@
     <string name="activity_draw_result_title">Winners</string>
     <string name="entries_fragment_no_winners">No Winners</string>
     <string name="fragment_raffle_list_missing_user">Please choose an account</string>
+    <string name="action_share">Share</string>
 
 </resources>
