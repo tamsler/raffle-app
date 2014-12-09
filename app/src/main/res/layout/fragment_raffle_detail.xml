@@ -21,6 +21,24 @@
         android:text="@string/fragment_raffle_detail_name_label"
         android:textAppearance="?android:attr/textAppearanceSmall"/>
 
+    <TextView
+        android:id="@+id/fragment_raffle_detail_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/fragment_raffle_detail_entry_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/fragment_raffle_detail_entry_label"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="gone"/>
+
     <EditText
         android:id="@+id/fragment_raffle_detail_entry_edit_text"
         android:layout_width="match_parent"
@@ -37,4 +55,5 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:text="@string/fragment_raffle_detail_add_entry_button"/>
+
 </LinearLayout>

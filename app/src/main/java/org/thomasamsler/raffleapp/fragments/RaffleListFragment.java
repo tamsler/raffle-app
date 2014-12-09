@@ -23,7 +23,6 @@ import org.thomasamsler.raffleapp.AppConstants;
 import org.thomasamsler.raffleapp.R;
 import org.thomasamsler.raffleapp.Utility;
 import org.thomasamsler.raffleapp.activities.AddRaffleActivity;
-import org.thomasamsler.raffleapp.activities.RaffleDetailActivity;
 import org.thomasamsler.raffleapp.adapters.RaffleAdapter;
 import org.thomasamsler.raffleapp.data.RaffleContract.RaffleEntry;
 

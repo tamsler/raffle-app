@@ -33,5 +33,6 @@
     <string name="entries_fragment_no_winners">No Winners</string>
     <string name="fragment_raffle_list_missing_user">Please choose an account</string>
     <string name="action_share">Share</string>
+    <string name="fragment_raffle_detail_entry_label">Entry</string>
 
 </resources>

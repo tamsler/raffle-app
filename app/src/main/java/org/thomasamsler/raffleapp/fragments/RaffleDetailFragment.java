@@ -8,14 +8,12 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -33,8 +31,6 @@ import org.thomasamsler.raffleapp.activities.DrawResultActivity;
 import org.thomasamsler.raffleapp.activities.EntriesActivity;
 import org.thomasamsler.raffleapp.data.RaffleContract.RaffleEntry;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class RaffleDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, AppConstants {
@@ -54,7 +50,9 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
     };
 
     private TextView mRaffleName;
-    private EditText mRaffleEntry;
+    private TextView mRaffleEntryLabel;
+    private TextView mRaffleEntryTextView;
+    private EditText mRaffleEntryEditText;
     private Button mAddEntryButton;
 
     public static RaffleDetailFragment newInstance(String raffleId) {
@@ -87,14 +85,16 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
         View rootView = inflater.inflate(R.layout.fragment_raffle_detail, container, false);
 
         mRaffleName = (TextView) rootView.findViewById(R.id.fragment_raffle_detail_name_text_view);
-        mRaffleEntry = (EditText) rootView.findViewById(R.id.fragment_raffle_detail_entry_edit_text);
+        mRaffleEntryTextView = (TextView) rootView.findViewById(R.id.fragment_raffle_detail_entry);
+        mRaffleEntryLabel = (TextView) rootView.findViewById(R.id.fragment_raffle_detail_entry_label);
+        mRaffleEntryEditText = (EditText) rootView.findViewById(R.id.fragment_raffle_detail_entry_edit_text);
         mAddEntryButton = (Button) rootView.findViewById(R.id.fragment_raffle_detail_add_entry_button);
         mAddEntryButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                String entry = mRaffleEntry.getText().toString();
+                String entry = mRaffleEntryEditText.getText().toString();
 
                 if(null == entry || "".equals(entry)) {
 
@@ -104,7 +104,7 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
 
                     Firebase.setAndroidContext(getActivity());
                     Firebase fbRef = new Firebase("https://raffle-app.firebaseio.com/raffles/" + mRaffleId + "/entries");
-                    fbRef.push().setValue(Utility.getPreferenceUserDigest(getActivity()) + "#" + mRaffleEntry.getText().toString(), new Firebase.CompletionListener() {
+                    fbRef.push().setValue(Utility.getPreferenceUserDigest(getActivity()) + "#" + mRaffleEntryEditText.getText().toString(), new Firebase.CompletionListener() {
 
                         @Override
                         public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -116,8 +116,11 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
                             else {
 
                                 Toast.makeText(getActivity(), R.string.fragment_raffle_detail_entry_success, Toast.LENGTH_SHORT).show();
-                                //mRaffleEntry.setText("");
-                                mAddEntryButton.setEnabled(false);
+                                mRaffleEntryTextView.setVisibility(View.VISIBLE);
+                                mRaffleEntryLabel.setVisibility(View.VISIBLE);
+                                mRaffleEntryTextView.setText(mRaffleEntryEditText.getText());
+                                mAddEntryButton.setVisibility(View.GONE);
+                                mRaffleEntryEditText.setVisibility(View.GONE);
                             }
                         }
                     });
@@ -139,7 +142,7 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
-        savedInstanceState.putString(RAFFLE_ENTRY_KEY, mRaffleEntry.getText().toString());
+        savedInstanceState.putString(RAFFLE_ENTRY_KEY, mRaffleEntryEditText.getText().toString());
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -151,9 +154,9 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
 
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
 
-        if (savedInstanceState != null) {
+        if(null != savedInstanceState) {
 
-            mRaffleEntry.setText(savedInstanceState.getString(RAFFLE_ENTRY_KEY));
+            mRaffleEntryEditText.setText(savedInstanceState.getString(RAFFLE_ENTRY_KEY));
         }
 
         /*
@@ -180,8 +183,11 @@ public class RaffleDetailFragment extends Fragment implements LoaderManager.Load
                             String[] tokens = entry.split("#");
                             if(user.equals(tokens[0])) {
 
-                                mAddEntryButton.setEnabled(false);
-                                mRaffleEntry.setText(tokens[1]);
+                                mAddEntryButton.setVisibility(View.GONE);
+                                mRaffleEntryEditText.setVisibility(View.GONE);
+                                mRaffleEntryTextView.setVisibility(View.VISIBLE);
+                                mRaffleEntryLabel.setVisibility(View.VISIBLE);
+                                mRaffleEntryTextView.setText(tokens[1]);
                                 break;
                             }
                         }

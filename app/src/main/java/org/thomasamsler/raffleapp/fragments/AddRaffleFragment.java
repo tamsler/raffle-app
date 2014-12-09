@@ -2,7 +2,6 @@ package org.thomasamsler.raffleapp.fragments;
 
 import android.app.Fragment;
 import android.content.ContentValues;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,14 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 import org.thomasamsler.raffleapp.AppConstants;
 import org.thomasamsler.raffleapp.R;
-import org.thomasamsler.raffleapp.data.RaffleContract;
 import org.thomasamsler.raffleapp.data.RaffleContract.RaffleEntry;
 import org.thomasamsler.raffleapp.models.Raffle;
 

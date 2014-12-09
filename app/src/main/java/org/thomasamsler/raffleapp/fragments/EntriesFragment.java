@@ -1,11 +1,8 @@
 package org.thomasamsler.raffleapp.fragments;
 
 import android.app.ListFragment;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
-import com.google.android.gms.common.AccountPicker;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;

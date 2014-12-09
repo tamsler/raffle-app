@@ -4,6 +4,7 @@ package org.thomasamsler.raffleapp.fragments;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,8 +26,12 @@ import java.util.Map;
 
 public class DrawResultListFragment extends ListFragment implements AppConstants {
 
+    private static final String RAFFLE_WINNERS_LIST_KEY = "winnersList";
+    private static final String RAFFLE_WINNERS_STRING_KEY = "winnersString";
+
     private ArrayAdapter<String> mAdapter;
     private List<String> mWinners;
+    private String mShareWinners;
     private String mRaffleId;
 
     private ShareActionProvider mShareActionProvider;
@@ -60,68 +65,88 @@ public class DrawResultListFragment extends ListFragment implements AppConstants
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        savedInstanceState.putStringArrayList(RAFFLE_WINNERS_LIST_KEY, (ArrayList) mWinners);
+        savedInstanceState.putString(RAFFLE_WINNERS_STRING_KEY, mShareWinners);
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
         super.onActivityCreated(savedInstanceState);
 
         setEmptyText(getString(R.string.entries_fragment_no_winners));
 
-        mWinners = new ArrayList<String>();
 
-        Firebase.setAndroidContext(getActivity());
-        Firebase fbRef = new Firebase("https://raffle-app.firebaseio.com/raffles/" + mRaffleId + "/entries");
+        if(null != savedInstanceState) {
 
-        fbRef.addValueEventListener(new ValueEventListener() {
+            mWinners = savedInstanceState.getStringArrayList(RAFFLE_WINNERS_LIST_KEY);
+            mAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mWinners);
+            setListAdapter(mAdapter);
 
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            mShareWinners = savedInstanceState.getString(RAFFLE_WINNERS_STRING_KEY);
+            mShareIntent.putExtra(Intent.EXTRA_TEXT, mShareWinners);
+        }
+        else {
 
-                Map<String, String> entries = (Map<String, String>) snapshot.getValue();
+            mWinners = new ArrayList<String>();
 
-                if(null == entries) {
+            Firebase.setAndroidContext(getActivity());
+            Firebase fbRef = new Firebase("https://raffle-app.firebaseio.com/raffles/" + mRaffleId + "/entries");
 
-                    mAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mWinners);
-                    setListAdapter(mAdapter);
-                }
-                else {
+            fbRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
-                    List<String> modifiedEntries = new ArrayList<String>();
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
 
-                    for(String entry : entries.values()) {
+                    Map<String, String> entries = (Map<String, String>) snapshot.getValue();
 
-                        modifiedEntries.add(entry.split("#")[1]);
-                    }
-
-                    mWinners.clear();
-                    Collections.shuffle(modifiedEntries);
-                    mWinners.addAll(modifiedEntries);
-
-                    if(null == mAdapter) {
+                    if(null == entries) {
 
                         mAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mWinners);
                         setListAdapter(mAdapter);
+                    } else {
+
+                        List<String> modifiedEntries = new ArrayList<String>();
+
+                        for(String entry : entries.values()) {
+
+                            modifiedEntries.add(entry.split("#")[1]);
+                        }
+
+                        mWinners.clear();
+                        Collections.shuffle(modifiedEntries);
+                        mWinners.addAll(modifiedEntries);
+
+                        if(null == mAdapter) {
+
+                            mAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mWinners);
+                            setListAdapter(mAdapter);
+                        } else {
+
+                            mAdapter.notifyDataSetChanged();
+                        }
+
+                        mShareWinners = "";
+
+                        for(String winner : modifiedEntries) {
+
+                            mShareWinners += winner + "\n";
+                        }
+
+                        mShareIntent.putExtra(Intent.EXTRA_TEXT, mShareWinners);
                     }
-                    else {
-
-                        mAdapter.notifyDataSetChanged();
-                    }
-
-                    String winners = "";
-
-                    for(String winner : modifiedEntries) {
-
-                        winners += winner + "\n";
-                    }
-
-                    mShareIntent.putExtra(Intent.EXTRA_TEXT, winners);
                 }
-            }
 
-            @Override
-            public void onCancelled(FirebaseError error) {
+                @Override
+                public void onCancelled(FirebaseError error) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @Override

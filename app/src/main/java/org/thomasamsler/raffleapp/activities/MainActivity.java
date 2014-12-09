@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 import org.thomasamsler.raffleapp.AppConstants;
 import org.thomasamsler.raffleapp.R;
 import org.thomasamsler.raffleapp.fragments.RaffleDetailFragment;
